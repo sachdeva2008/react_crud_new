@@ -18,33 +18,29 @@ class Dashboard extends React.Component {
    
 
     componentDidMount(){
-        document.addEventListener('contextmenu', this._handleContextMenu);
+        document.addEventListener('contextmenu', this.hideContextMenu);
         document.addEventListener('click', this.hideContextMenu);
-        document.addEventListener('scroll', this._handleScroll);
+        document.addEventListener('scroll', this.hideContextMenu);
     }
 
-    shouldComponentUpdate(nextProps) {
-        return this.props !== nextProps ? true : false;
+    componentWillUnmount(){
+        document.removeEventListener('contextmenu', this.hideContextMenu);
+        document.removeEventListener('click', this.hideContextMenu);
+        document.removeEventListener('scroll', this.hideContextMenu);
     }
+    // shouldComponentUpdate(nextProps) {
+    //     return this.props !== nextProps ? true : false;
+    // }
 
     contextMenuHandler = (data,event) => {
-        if(data === "customizedTr"){
-            event.preventDefault();
-            const {clientX,clientY} = event;
-            this.setState({contextMenu : true});         
-            this.setState({top:clientY,left:clientX});
-        }
-        else{
-            if(this.state.contextMenu){
-                this.setState({contextMenu : false});
-            }    
-        }
+        event.preventDefault();
+        const {clientX,clientY} = event;
+        this.setState({contextMenu : true});         
+        this.setState({top:clientY,left:clientX});
     }
 
     hideContextMenu = () =>{ 
-        console.log("here");
-        const { contextMenu } = this.state;
-        if (contextMenu) this.setState({ contextMenu: false });    
+        this.setState({ contextMenu: false });    
     }
 
     _handleScroll = () => {
@@ -52,14 +48,13 @@ class Dashboard extends React.Component {
         if (contextMenu) this.setState({ contextMenu: false });
     };
 
-   
 
     render(){
         let dataSet = null;
-        
         const WrappingMenuComponent = () =>{
+
             return (
-                <div style={{top: `${this.state.top}px`,left: `${this.state.top}px`,position: "absolute"}}>
+                <div style={{top: `${this.state.top}px`,left: `${this.state.left}px`,position: "absolute"}}>
                     <Menu />
                 </div>
             );
