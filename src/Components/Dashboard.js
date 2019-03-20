@@ -18,35 +18,28 @@ class Dashboard extends React.Component {
    
 
     componentDidMount(){
-        document.addEventListener('contextmenu', this.hideContextMenu);
+        //document.addEventListener('contextmenu', this.hideContextMenu);
         document.addEventListener('click', this.hideContextMenu);
         document.addEventListener('scroll', this.hideContextMenu);
     }
 
     componentWillUnmount(){
-        document.removeEventListener('contextmenu', this.hideContextMenu);
+        //document.removeEventListener('contextmenu', this.hideContextMenu);
         document.removeEventListener('click', this.hideContextMenu);
         document.removeEventListener('scroll', this.hideContextMenu);
     }
-    // shouldComponentUpdate(nextProps) {
-    //     return this.props !== nextProps ? true : false;
-    // }
 
     contextMenuHandler = (data,event) => {
         event.preventDefault();
         const {clientX,clientY} = event;
         this.setState({contextMenu : true});         
-        this.setState({top:clientY,left:clientX});
+        this.setState({top:clientY+document.body.scrollTop + document.documentElement.scrollTop,left:clientX+document.body.scrollLeft + document.documentElement.scrollLeft });
     }
 
     hideContextMenu = () =>{ 
-        this.setState({ contextMenu: false });    
-    }
-
-    _handleScroll = () => {
         const { contextMenu } = this.state;
-        if (contextMenu) this.setState({ contextMenu: false });
-    };
+        if (contextMenu) this.setState({ contextMenu: false });    
+    }
 
 
     render(){
